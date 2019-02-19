@@ -12,6 +12,7 @@ import test_scenarios
 import argparse
 import time
 import cv2
+import scenic
 
 from translator import *
 #from example import get_one_example
@@ -57,51 +58,19 @@ if __name__ == '__main__':
     # strip extension off filename if necessary
     name = "scenarios/platoonDaytime"
 
-    # import module
     startTime = time.time()
-    module = importlib.import_module(name)
     # construct scenario
-    scenario = constructScenarioFrom(module)
-
-    # print('scenario constructed in {:.2f} seconds'.format(time.time() - startTime))
-    # # generate scenes
-    # while True:
-    #     scene = scenario.generate()
-    #     for obj in scene.cars:
-    #         obj.position = obj.position.toVector()      # TODO remove hack
-    #         #print(obj.position)
-    #     scene.show(zoom=2)
-
-
-    # try:
-    #     m = Map.fromFile('map.npz')
-    # except FileNotFoundError:
-    #     m = Map('pics/gta_map.png',
-    #         Ax=0.758725341426, Ay=-0.759878419452888,
-    #         Bx=-1038.694992412747, By=79.787234042553209)
-    #     m.dumpToFile('map.npz')
+    scenario = scenic.scenarioFromFile(name)
 
 
     end = int(args.end)
     start = int(args.start)
 
     for idx in range(0, 1):
-    #cfg666 = get_one_example()
-        # s = test_scenarios.bumperToBumper(m, depth=4)
-        #s = test_scenarios.platoon(m, numCars=3)
-        # concrete = s.generate()
-        #concrete.show(zoom=2)
-        scene = scenario.generate()
-        for obj in scene.cars:
-            obj.position = obj.position.toVector()      # TODO remove hack
-            #print(obj.position)
-        # scene.show(zoom=2)
 
+        scene, _ = scenario.generate()
+        cfg666 = scenic.simulators.gta.interface.GTA.Config(scene)
 
-
-
-        cfg666 = scene.toSimulatorConfig()
-        print("camera location: ", cfg666.location)
         for car in cfg666.vehicles:
             print(car)
         cfgs=[cfg666]
@@ -120,31 +89,3 @@ if __name__ == '__main__':
         client = Client(ip=args.host, port=args.port, datasetPath=args.dataset_path, compressionLevel=9)
 
         client.sendMessage(Formal_Configs(cfgs))
-
-
-    #     # Start listening for messages coming from DeepGTAV. We do it for 80 hours
-    #     # stoptime = time.time() + 80*3600
-    #     #while time.time() < stoptime:
-    #     i = 0
-    #     while i < len(cfgs):
-    #         try:
-    #             # We receive a message as a Python dictionary
-    #             print("receiving")
-    #             message = client.recvMessage(i, args.index)
-                
-    #             # The frame is a numpy array and can be displayed using OpenCV or similar
-    #             print("before converting image..")
-    #             image = frame2numpy(message['frame'], (1920,1200))
-    #             #cv2.imshow('img',image)
-    #             #cv2.imwrite(str(i) + 'img.png',image)
-    #             print("mid converting image..")
-    #             cv2.imwrite(args.index + '.png', image)
-    #             print("after converting image..")
-    #             #cv2.waitKey(-1)
-    #         except KeyboardInterrupt:
-    #             break
-    #         i += 1
-
-    # # # We tell DeepGTAV to stop
-    # #client.sendMessage(Stop())
-    #     client.close()
