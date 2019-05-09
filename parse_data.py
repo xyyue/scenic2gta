@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import os
+from numpy.lib.stride_tricks import as_strided
 
 # image converting part
 root = "C:\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto V\\kk"
