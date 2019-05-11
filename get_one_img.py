@@ -7,11 +7,9 @@ from deepgtav.client import Client
 
 import argparse
 import time
+import scenic
 
-from translator import *
-# import importlib
-#from example import get_one_example
-# Stores a dataset file with data coming from DeepGTAV
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=None)
     parser.add_argument('-l', '--host', default='localhost', help='The IP where DeepGTAV is running')
@@ -25,32 +23,28 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
 
-    name = "scenarios/platoonDaytime"
+    name = "examples/gta/platoonDaytime.sc"
 
-    # import module
     startTime = time.time()
-    module = importlib.import_module(name)
     # construct scenario
-    scenario = constructScenarioFrom(module)
+    scenario = scenic.scenarioFromFile(name)
+
 
     end = int(args.end)
     start = int(args.start)
 
     for idx in range(0, 1):
-        scene = scenario.generate()
-        for obj in scene.cars:
-            obj.position = obj.position.toVector()      # TODO remove hack
 
-        my_cfg = scene.toSimulatorConfig()
-        print("camera location: ", my_cfg.location)
+        scene, _ = scenario.generate()
+        my_cfg = scenic.simulators.gta.interface.GTA.Config(scene)
+
         for car in my_cfg.vehicles:
             print(car)
         cfgs=[my_cfg]
 
         print("The object is :", my_cfg)
         with open("C:\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto V\\kk\\config_" + args.index + ".txt", "w") as fw:
-        # with open(args.index + ".txt", "w") as fw:
-            # fw.write(str(my_cfg))
+
             fw.write(str(my_cfg.location) + "\n")
             fw.write(str(my_cfg.time) + "\n")
             fw.write(str(my_cfg.weather) + "\n")
@@ -58,4 +52,5 @@ if __name__ == '__main__':
             fw.write(str(my_cfg.view_heading))
 
         client = Client(ip=args.host, port=args.port, datasetPath=args.dataset_path, compressionLevel=9)
+
         client.sendMessage(Formal_Configs(cfgs))
