@@ -20,10 +20,12 @@ if __name__ == '__main__':
     parser.add_argument('-n', '--f_b', default='10')
     parser.add_argument('-end', '--end', default='100')
     parser.add_argument('-start', '--start', default='0')
+    parser.add_argument('-sc', '--sc_file', default='examples/gta/platoonDaytime.sc')
     args = parser.parse_args()
 
 
-    name = "examples/gta/platoonDaytime.sc"
+    #name = "examples/gta/platoonDaytime.sc"
+    name = args.sc_file
 
     startTime = time.time()
     # construct scenario
