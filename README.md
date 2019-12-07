@@ -5,7 +5,7 @@
 ## Setting
 
 1. Follow the necessary setup steps in *[DeepGTAV](https://github.com/aitorzip/DeepGTAV)*.
-2. Run *setup.py* to do additional setups of the environment. 
+2. Run *setup.sh* to do additional setups of the environment. 
 3. Copy *.bins into the folder where the GTAV binay is.
 4. Run GTAV and get into the game. 
 5. Press *F4* to get the menue; use the numpad to navigate the menu (8 - Up, 2 - Down, 5 - Select): select “CAR” - “QUICK START”; press F4 again to hide the menu. 
